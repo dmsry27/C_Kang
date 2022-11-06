@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;     
 
@@ -11,16 +14,18 @@ public class Player : MonoBehaviour
     PlayerInputSystem input;
     Animator ani;
     Rigidbody rigid;
-    Collider bodyCollider;
+    Warrior warrior;
+    WaitForSeconds q_Cooltime;
     
     Vector3 clickPositon;
 
     private void Awake()
     {
         input = new PlayerInputSystem();
+        q_Cooltime = new WaitForSeconds(2.0f);
         ani = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
-        bodyCollider = GetComponent<Collider>();
+        warrior = GetComponent<Warrior>();
     }
 
     private void OnEnable()
@@ -28,10 +33,22 @@ public class Player : MonoBehaviour
         input.Player.Enable();
         input.Player.Move.performed += OnMouseClick;
         input.Player.Dive.performed += OnDive;
+        input.Player.Attack.performed += OnAttack;
+        input.Player.Q_Skill.performed += On_Q;
+        input.Player.W_Skill.performed += On_W;
+        input.Player.E_Skill.performed += On_E;
+        input.Player.R_Skill.performed += On_R;
+        input.Player.Pickup.performed += OnItemPickup;
     }
 
     private void OnDisable()
     {
+        input.Player.Pickup.performed -= OnItemPickup;
+        input.Player.R_Skill.performed -= On_R;
+        input.Player.E_Skill.performed -= On_E;
+        input.Player.W_Skill.performed -= On_W;
+        input.Player.Q_Skill.performed -= On_Q;
+        input.Player.Attack.performed -= OnAttack;
         input.Player.Dive.performed -= OnDive;
         input.Player.Move.performed -= OnMouseClick;
         input.Player.Disable();
@@ -70,19 +87,63 @@ public class Player : MonoBehaviour
             isMove = false;
             ani.SetBool("IsMove", isMove);
         }
-        rigid.rotation = Quaternion.Slerp(rigid.rotation, Quaternion.LookRotation(dir.normalized), rotateSpeed * Time.fixedDeltaTime);
+        rigid.rotation = Quaternion.Slerp(rigid.rotation, Quaternion.LookRotation(dir), rotateSpeed * Time.fixedDeltaTime);
+    }
+
+    private void OnAttack(InputAction.CallbackContext obj)
+    {
     }
 
     private void OnDive(InputAction.CallbackContext _)
     {
-        isMove = false;
         ani.SetTrigger("Dive");
+        isMove = false;
+        ani.SetBool("IsMove", isMove);
         input.Player.Disable();
     }
     
     public void OffDive()
     {
         input.Player.Enable();
+    }
+
+    IEnumerator Q_Cooldown()
+    {
+        input.Player.Q_Skill.performed -= On_Q;
+        yield return q_Cooltime;
+        input.Player.Q_Skill.performed += On_Q;
+    }
+
+    private void On_Q(InputAction.CallbackContext _)
+    {
+        Vector3 dir = transform.rotation * Vector3.forward;
+        Quaternion.LookRotation(dir);
+        clickPositon = transform.position;
+        warrior.Q_Skill();
+        StartCoroutine(Q_Cooldown());
+    }
+
+    private void On_W(InputAction.CallbackContext _)
+    {
+        warrior.W_Skill();
+    }
+
+    private void On_E(InputAction.CallbackContext _)
+    {
+        warrior.E_Skill();
+    }
+
+    private void On_R(InputAction.CallbackContext _)
+    {
+        if (warrior.Rage == 100)
+        {
+            warrior.R_Skill();
+        }
+    }
+
+    private void OnItemPickup(InputAction.CallbackContext _)
+    {
+        // 아이템 획득 버튼
     }
 
     private void OnDrawGizmos()

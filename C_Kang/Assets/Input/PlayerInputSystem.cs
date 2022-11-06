@@ -44,6 +44,60 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""99ffdfb1-09cb-46e1-a8f0-b9368135f808"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Q_Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""5dd8fd4d-e308-4df9-8432-b90bc71cc16e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""W_Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""647e63af-a33c-4754-8fdc-264523c5a673"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""E_Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""ea03b499-256e-43ba-b3e9-66120d66a063"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""R_Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad16bea2-bcd5-4014-b66e-e63d59b83070"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pickup"",
+                    ""type"": ""Button"",
+                    ""id"": ""77104357-9eaf-4c8b-af4f-1cb2a038496b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -66,6 +120,72 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KM"",
                     ""action"": ""Dive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ee6bc2d-6c74-443f-98fc-c82b528f665d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""def6f793-83e0-45d4-ae72-8465dad75bc7"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""Q_Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5127ea4-ca4b-45cd-a7fc-3fa96de44bce"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""W_Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e047b236-16ea-43b9-b357-0d66a6d50767"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""E_Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2df2688e-f27e-4ca9-ad95-5f7ab2173c50"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""R_Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""087e067a-b5a3-46f3-b326-37b1244db5c4"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -95,6 +215,12 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Dive = m_Player.FindAction("Dive", throwIfNotFound: true);
+        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_Q_Skill = m_Player.FindAction("Q_Skill", throwIfNotFound: true);
+        m_Player_W_Skill = m_Player.FindAction("W_Skill", throwIfNotFound: true);
+        m_Player_E_Skill = m_Player.FindAction("E_Skill", throwIfNotFound: true);
+        m_Player_R_Skill = m_Player.FindAction("R_Skill", throwIfNotFound: true);
+        m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -156,12 +282,24 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Dive;
+    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_Q_Skill;
+    private readonly InputAction m_Player_W_Skill;
+    private readonly InputAction m_Player_E_Skill;
+    private readonly InputAction m_Player_R_Skill;
+    private readonly InputAction m_Player_Pickup;
     public struct PlayerActions
     {
         private @PlayerInputSystem m_Wrapper;
         public PlayerActions(@PlayerInputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Dive => m_Wrapper.m_Player_Dive;
+        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @Q_Skill => m_Wrapper.m_Player_Q_Skill;
+        public InputAction @W_Skill => m_Wrapper.m_Player_W_Skill;
+        public InputAction @E_Skill => m_Wrapper.m_Player_E_Skill;
+        public InputAction @R_Skill => m_Wrapper.m_Player_R_Skill;
+        public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -177,6 +315,24 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                 @Dive.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDive;
                 @Dive.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDive;
                 @Dive.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDive;
+                @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @Q_Skill.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnQ_Skill;
+                @Q_Skill.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnQ_Skill;
+                @Q_Skill.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnQ_Skill;
+                @W_Skill.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnW_Skill;
+                @W_Skill.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnW_Skill;
+                @W_Skill.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnW_Skill;
+                @E_Skill.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnE_Skill;
+                @E_Skill.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnE_Skill;
+                @E_Skill.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnE_Skill;
+                @R_Skill.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnR_Skill;
+                @R_Skill.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnR_Skill;
+                @R_Skill.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnR_Skill;
+                @Pickup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
+                @Pickup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
+                @Pickup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -187,6 +343,24 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
                 @Dive.started += instance.OnDive;
                 @Dive.performed += instance.OnDive;
                 @Dive.canceled += instance.OnDive;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
+                @Q_Skill.started += instance.OnQ_Skill;
+                @Q_Skill.performed += instance.OnQ_Skill;
+                @Q_Skill.canceled += instance.OnQ_Skill;
+                @W_Skill.started += instance.OnW_Skill;
+                @W_Skill.performed += instance.OnW_Skill;
+                @W_Skill.canceled += instance.OnW_Skill;
+                @E_Skill.started += instance.OnE_Skill;
+                @E_Skill.performed += instance.OnE_Skill;
+                @E_Skill.canceled += instance.OnE_Skill;
+                @R_Skill.started += instance.OnR_Skill;
+                @R_Skill.performed += instance.OnR_Skill;
+                @R_Skill.canceled += instance.OnR_Skill;
+                @Pickup.started += instance.OnPickup;
+                @Pickup.performed += instance.OnPickup;
+                @Pickup.canceled += instance.OnPickup;
             }
         }
     }
@@ -204,5 +378,11 @@ public partial class @PlayerInputSystem : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnDive(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
+        void OnQ_Skill(InputAction.CallbackContext context);
+        void OnW_Skill(InputAction.CallbackContext context);
+        void OnE_Skill(InputAction.CallbackContext context);
+        void OnR_Skill(InputAction.CallbackContext context);
+        void OnPickup(InputAction.CallbackContext context);
     }
 }
