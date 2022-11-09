@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,17 +8,17 @@ public class Player : MonoBehaviour
     public float moveSpeed = 5.0f;
     public float rotateSpeed = 30.0f;
 
-    bool isPlay = false;
-
     PlayerInputSystem input;
     Animator ani;
     Rigidbody rigid;
-    Warrior warrior;
 
     Vector3 clickPositon;
-    PlayerState state;
 
+    Warrior warrior;
+    public Action onQ_Skill;
     Action updateState;
+    
+    PlayerState state = PlayerState.Run;
 
     enum PlayerState
     {
@@ -36,54 +35,56 @@ public class Player : MonoBehaviour
         get => state;
         set
         {
-            switch (state)
+            if (state != value)
             {
-                case PlayerState.Idle:
-                    break;
-                case PlayerState.Run:
-                    ani.applyRootMotion = true;
-                    ani.SetBool("IsMove", false);
-                    break;
-                case PlayerState.Dive:
-                    break;
-                case PlayerState.Attack:
-                    break;
-                case PlayerState.Skill:
-                    break;
-                case PlayerState.Die:
-                    break;
-                default:
-                    break;
-            }
-            state = value;
-            switch (state)
-            {
-                case PlayerState.Idle:
-                    updateState = Update_Idle;
-                    break;
-                case PlayerState.Run:
-                    ani.applyRootMotion = false;
-                    ani.SetBool("IsMove", true);
-                    updateState = Update_Run;
-                    break;
-                case PlayerState.Dive:
-                    ani.SetTrigger("Dive");
-                    isPlay = true;
-                    updateState = Update_Dive;
-                    break;
-                case PlayerState.Attack:
-                    ani.SetTrigger("Attack");
-                    isPlay = true;
-                    updateState = Update_Attack;
-                    break;
-                case PlayerState.Skill:
-                    updateState = Update_Skill;
-                    break;
-                case PlayerState.Die:
-                    updateState = Update_Die;
-                    break;
-                default:
-                    break;
+                switch (state)
+                {
+                    case PlayerState.Idle:
+                        break;
+                    case PlayerState.Run:
+                        ani.applyRootMotion = true;
+                        ani.SetBool("IsMove", false);
+                        break;
+                    case PlayerState.Dive:
+                        break;
+                    case PlayerState.Attack:
+                        break;
+                    case PlayerState.Skill:
+                        break;
+                    case PlayerState.Die:
+                        break;
+                    default:
+                        break;
+                }
+                state = value;
+                switch (state)
+                {
+                    case PlayerState.Idle:
+                        updateState = Update_Idle;
+                        break;
+                    case PlayerState.Run:
+                        ani.applyRootMotion = false;
+                        ani.SetBool("IsMove", true);
+                        updateState = Update_Run;
+                        break;
+                    case PlayerState.Dive:
+                        input.Player.Disable();
+                        ani.SetTrigger("Dive");
+                        updateState = Update_Dive;
+                        break;
+                    case PlayerState.Attack:
+                        updateState = Update_Attack;
+                        break;
+                    case PlayerState.Skill:
+                        input.Player.Disable();
+                        updateState = Update_Skill;
+                        break;
+                    case PlayerState.Die:
+                        updateState = Update_Die;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
         input = new PlayerInputSystem();
         ani = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
+        
         warrior = GetComponent<Warrior>();
     }
 
@@ -146,12 +148,12 @@ public class Player : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext _)
     { 
-        State = PlayerState.Attack;
+        
     }
 
     private void OnDive(InputAction.CallbackContext _)
     {
-         State = PlayerState.Dive;
+        State = PlayerState.Dive;
     }
 
     void Update_Idle()
@@ -164,25 +166,23 @@ public class Player : MonoBehaviour
         Vector3 dir = clickPositon - transform.position;
 
         if (dir.sqrMagnitude > 0.1f)
-        {
             rigid.MovePosition(rigid.position + moveSpeed * Time.fixedDeltaTime * dir.normalized);
-        }
         else
-        {
             State = PlayerState.Idle;
-        }
+        
         rigid.rotation = Quaternion.Slerp(rigid.rotation, Quaternion.LookRotation(dir), rotateSpeed * Time.fixedDeltaTime);
     }
 
     void Update_Dive()
     {
-        
+        State = PlayerState.Dive;
     }
 
     void Update_Attack()
     {
 
     }
+
     void Update_Skill()
     {
 
@@ -194,7 +194,8 @@ public class Player : MonoBehaviour
 
     private void On_Q(InputAction.CallbackContext _)
     {
-        warrior.Q_Skill();
+        onQ_Skill?.Invoke();
+        State = PlayerState.Skill;
     }
 
     private void On_W(InputAction.CallbackContext _)
@@ -213,11 +214,23 @@ public class Player : MonoBehaviour
         {
             warrior.R_Skill();
         }
+
+        //float delay = 3f; // 원하는 지연시간(초)
+        //while (delay > 0f)
+        //{
+        //    yield return null;
+        //    delay -= Time.deltaTime;
+        //}
     }
 
     private void OnItemPickup(InputAction.CallbackContext _)
     {
         // 아이템 획득 버튼
+    }
+
+    public void AnimationOffEvent()
+    {
+        input.Player.Enable();
     }
 
     private void OnDrawGizmos()

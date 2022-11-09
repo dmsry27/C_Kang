@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class Warrior : MonoBehaviour
@@ -14,6 +13,7 @@ public class Warrior : MonoBehaviour
     Animator ani;
     Transform swordLocation;
     Collider swordCollider;
+    Player player;
 
     public int Rage
     {
@@ -30,6 +30,7 @@ public class Warrior : MonoBehaviour
 
     private void Awake()
     {
+        player = GameManager.Inst.Player;
         ani = GetComponent<Animator>();
         swordLocation = GetComponentInChildren<SwordLocation>().transform;
         swordCollider = swordLocation.GetChild(1).GetComponent<Collider>();
@@ -39,13 +40,33 @@ public class Warrior : MonoBehaviour
     {
         Rage = 0;
         maxRage = 100;
+        player.onQ_Skill += Q_Skill;
     }
 
-    public void Q_Skill()
+    bool Qing = false;
+
+    void Q_Skill()
     {
-        Rage += 15;
-        swordCollider.enabled = true;
+        if (!Qing)
+        {
+            StartCoroutine(qq());
+        }
+        //Rage += 15;
+        //swordCollider.enabled = true;
+        //float inputTime = Time.time;
+        //float coolTime = 3.0f;
+
+    }
+
+    IEnumerator qq()
+    {
+        Qing = true;
         ani.SetTrigger("QTrigger");
+
+
+        yield return new WaitForSeconds(3.0f);
+
+        Qing = false;
     }
 
     public void W_Skill()
@@ -63,7 +84,7 @@ public class Warrior : MonoBehaviour
 
     }
 
-    public void SwordColliderOff()
+    void SwordColliderOff()
     {
         swordCollider.enabled = false;
     }
