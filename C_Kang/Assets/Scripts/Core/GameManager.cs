@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    Player player;
+    Warrior player;
 
-    public Player Player => player;
+    public Warrior Player => player;
 
     protected override void Initialize()
     {
-        player = FindObjectOfType<Player>();
+        player = FindObjectOfType<Warrior>();
     }
 }
